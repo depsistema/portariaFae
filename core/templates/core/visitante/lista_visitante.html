@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h3>Controle Visitantes</h3>
+        <hr>
+        
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Adicionar Registro
+        </button>
+        
+        <!-- Modal -->
+        <form method="POST" >
+            {% csrf_token %}
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registro Visitante</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">Registro Entrada</label>
+                                {% render_field form.registro_entrada type="datetime-local" class="form-control" %}
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label">Nome</label>
+                                {% render_field form.nome type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">CPF</label>
+                                {% render_field form.cpf type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Placa</label>
+                                {% render_field form.placa_carro type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Empresa</label>
+                                {% render_field form.empresa type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Nota Fiscal</label>
+                                {% render_field form.nota_fiscal type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Autorização</label>
+                                {% render_field form.autorizacao type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Registro Saida</label>
+                                {% render_field form.registro_saida type="datetime-local" class="form-control" %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Observação</label>
+                                {% render_field form.observacao type="text" class="form-control" %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </form>
+        <br><br>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Registros de Visitantes
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-hover" id="example">
+                    <thead>
+                        <tr>
+                            <th>Registro Entrada</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Placa</th>
+                            <th>Empresa</th>
+                            <th>Nota Fiscal</th>
+                            <th>Registro Saida</th>
+                            <th>Observação</th>
+                            <th>Autorização</th>
+                            <th>Porteiro</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for visitante in visitantes %}
+                        <tr>
+                            <td>{{visitante.registro_entrada | date:"d/m/Y H:m"}}</td>
+                            <td>{{visitante.nome}}</td>
+                            <td>{{visitante.cpf}}</td>
+                            <td>{{visitante.placa_carro}}</td>
+                            <td>{{visitante.empresa}}</td>
+                            <td>{{visitante.nota_fiscal}}</td>
+                            {% if visitante.registro_saida != None %}
+                                <td>{{visitante.registro_saida | date:"d/m/Y H:m"}}</td>
+                            {% else %}
+                                <td><i style="color: #b11727;" class="bi bi-exclamation-circle-fill"></i></td>
+                            {% endif %}
+                            <td>{{visitante.observacao}}</td>
+                            <td>{{visitante.autorizacao}}</td>
+                            <td>{{visitante.porteiro}}</td>
+                            {% if visitante.registro_saida == None %}
+                            <td>
+                                <button onclick="finalizarSaida({{visitante.id}});" name="btn-finalizar"
+                                    class="btn btn-danger" value="{{visitante.id}}">Registrar Saida</button>
+                            </td>
+                            {% else %}
+                            <th class="animate__animated animate__flash"><i style="color: green;" class="bi bi-check-square-fill"></i></th>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+            <div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+{% block scripts %}
+<script>
+    function finalizarSaida(id) {
+        var url = "{% url 'finalizar_saida' %}";
+        alert(id);
+        $.confirm({
+            title: 'Aviso',
+            content: 'Deseja continuar ?',
+            buttons: {
+                info: {
+                    text: 'Confirmar Saida',
+                    btnClass: 'btn-success',
+                    action: function () {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                'id': id,
+                            },
+                            success: function(){
+                                Swal.fire({
+                                    title:'Registro salvo com sucesso.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload()
+                                    }
+                                })
+                            },
+                        })
+                        
+                    },
+                },
+                warning: {
+                    text: 'Cancelar',
+                    btnClass: 'btn-warning',
+                    action: function () {
+                        location.reload();
+                    }
+                },
+
+            }
+        })
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<main>
+    <div class="container-fluid px-4">
+        <h3>Controle Veiculo</h3>
+        <hr>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalRegistroChave">
+            Adicionar Registro
+        </button>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalSetor">
+            Adicionar Setor
+        </button>
+        
+        <!-- Modal Chave-->
+        <form method="POST" action="{% url 'controle_veiculo' %}">
+            {% csrf_token %}
+        <div class="modal fade" id="ModalRegistroChave" tabindex="-1" aria-labelledby="ModalRegistroChaveLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="ModalRegistroChaveLabel">Registro Veiculo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-8">
+                                <label class="form-label">Funcionário</label>
+                                {% render_field form.nome type="text" class="form-control" %}
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Setor</label>
+                                {% render_field form.setor class="form-control" %}
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">Registro Entrada</label>
+                                {% render_field form.registro_entrada type="datetime-local" class="form-control" %}
+                            </div>  
+                            <div class="col-3">
+                                <label class="form-label">Registro Saida</label>
+                                {% render_field form.registro_saida type="datetime-local" class="form-control" %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" name="formControleVeiculo" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </form>
+        
+        <!-- Modal Setor -->
+        <form method="POST" action="{% url 'controle_veiculo' %}">
+            {% csrf_token %}
+        <div class="modal fade" id="ModalSetor" tabindex="-1" aria-labelledby="ModalSetorLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="ModalSetorLabel">Adicionar Setor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label">Setor</label>
+                                {% render_field form_setor.nome class="form-control" %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" name="formSetorVeiculo" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        </form>
+        <br><br>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Registros de entrada e saida dos veiculos
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-hover" id="example">
+                    <thead>
+                        <tr>
+                            <th>Funcionário</th>
+                            <th>Setor</th>
+                            <th>Registro Entrada</th>
+                            <th>Registro Saida</th>
+                            <th>Porteiro</th>
+                            <th>Ação</th>
+                            
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for veiculo in veiculos %}
+                        <tr>
+                            <td>{{veiculo.nome}}</td>
+                            <td>{{veiculo.setor}}</td>
+                            <td>{{veiculo.registro_entrada | date:"d/m/Y H:m"}}</td>
+                            {% if veiculo.registro_saida != None %}
+                            <td>{{veiculo.registro_saida | date:"d/m/Y H:m"}}</td>
+                            {% else %}
+                            <td><i style="color:#b11727;" class="bi bi-exclamation-circle-fill"></i></td>
+                            {% endif %}
+                            <td>{{veiculo.porteiro}}</td>
+                            {% if veiculo.registro_saida == None %}
+                            <td>
+                                <button onclick="finalizarSaida({{veiculo.id}});" name="btn-finalizar"
+                                    class="btn btn-danger" value="{{chave.id}}">Registro Saida</button>
+                            </td>
+                            {% else %}
+                            <th class="animate__animated animate__flash"><i style="color: green;" class="bi bi-check-square-fill"></i></th>
+                            {% endif %}
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+            <div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+{% block scripts %}
+<script>
+    function finalizarSaida(id) {
+        var url = "{% url 'finalizar_saida_veiculo' %}"
+        var url_get = "{% url 'controle_veiculo' %}"
+        const data = new Date(); // momento atual 
+        const horas = data.getHours();
+        const minutos = data.getMinutes();
+
+        const hhmmm = [horas, minutos].join(':');
+        $.confirm({
+            title: 'Aviso',
+            content: 'Deseja continuar ?',
+            buttons: {
+                info: {
+                    text: 'Confirmar saida',
+                    btnClass: 'btn-success',
+                    action: function () {
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: {
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                'id': id,
+                                'hora_saida': hhmmm,
+                            },
+                            success: function(){
+                                Swal.fire({
+                                    title:'Registro salvo com sucesso.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload()
+                                    }
+                                })
+                            },
+                            
+                        })                        
+                    },
+                },
+                warning: {
+                    text: 'Cancelar',
+                    btnClass: 'btn-warning',
+                    action: function () {
+                        location.reload()
+                    }
+                },
+
+            }
+        })
+    }
+
+</script>
+{% endblock %}
