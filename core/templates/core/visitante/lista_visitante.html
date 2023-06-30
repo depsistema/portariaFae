@@ -79,7 +79,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                <table class="table table-hover" id="example">
+                <table class="table table-hover" id="tableVisitante">
                     <thead>
                         <tr>
                             <th>Registro Entrada</th>
@@ -147,7 +147,6 @@
 <script>
     function finalizarSaida(id) {
         var url = "{% url 'finalizar_saida' %}";
-        alert(id);
         $.confirm({
             title: 'Aviso',
             content: 'Deseja continuar ?',
