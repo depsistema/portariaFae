@@ -70,6 +70,11 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Controle de Veiculos
                         </a>
+                        <a class="nav-link" href="{% url 'relatorio' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Relatório/Auditoria
+                        </a>
+                        
                         
                     </div>
                 </div>
@@ -95,6 +100,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.66/build/pdfmake.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.66/build/vfs_fonts.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="{% static 'js/datatable.js' %}"></script>
     {% block scripts %}

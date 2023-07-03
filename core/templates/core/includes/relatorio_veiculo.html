@@ -1,0 +1,35 @@
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Registros de entrada e saida dos veiculos
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+        <table class="table table-hover" id="relatorioVeiculo">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Funcionário</th>
+                    <th>Setor</th>
+                    <th>Registro Entrada</th>
+                    <th>Registro Saida</th>
+                    <th>Porteiro</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for veiculo in consulta_veiculo %}
+                <tr>
+                    <td>{{veiculo.id}}</td>
+                    <td>{{veiculo.nome}}</td>
+                    <td>{{veiculo.setor}}</td>
+                    <td>{{veiculo.registro_entrada | date:"d/m/Y H:m"}}</td>
+                    <td>{{veiculo.registro_saida | date:"d/m/Y H:m"}}</td>
+                    <td>{{veiculo.porteiro}}</td> 
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>

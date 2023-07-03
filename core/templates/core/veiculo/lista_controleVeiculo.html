@@ -12,6 +12,8 @@
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalSetor">
             Adicionar Setor
         </button>
+
+        {% include 'core/includes/messages.html' %}
         
         <!-- Modal Chave-->
         <form method="POST" action="{% url 'controle_veiculo' %}">
@@ -94,6 +96,7 @@
                 <table class="table table-hover" id="tableControleVeiculo">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Funcionário</th>
                             <th>Setor</th>
                             <th>Registro Entrada</th>
@@ -107,6 +110,7 @@
                     <tbody>
                         {% for veiculo in veiculos %}
                         <tr>
+                            <td>{{veiculo.id}}</td>
                             <td>{{veiculo.nome}}</td>
                             <td>{{veiculo.setor}}</td>
                             <td>{{veiculo.registro_entrada | date:"d/m/Y H:m"}}</td>

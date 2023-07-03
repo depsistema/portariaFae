@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container-fluid px-4">
+  <h3>Relatório/Auditória</h3>
+  <hr />
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-6">
+            <label class="form-label"> Data inicial </label>
+            <input id="dataInicial" class="form-control" type="date" name="data_inicial" required="true" />
+            </div>
+            <div class="col-6">
+            <label class="form-label"> Data Final </label>
+            <input id="dataFinal" class="form-control" type="date" name="data_final" required="true"/>
+        </div>
+        <label class="form-label">Tipo de relatório</label>
+        <div class="col-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="ControleVisitante" required="true">
+                <label class="form-check-label" for="inlineRadio1">Controle Visitantes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="ControleChave" required="true">
+                <label class="form-check-label" for="inlineRadio2">Controle Chaves</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="ControleVeiculo" required="true">
+                <label class="form-check-label" for="inlineRadio3">Controle Veiculos</label>
+            </div>
+        </div>
+        
+    </div>
+    <br />
+    <button id="gerarRelatorio" type="submit" class="btn btn-primary">Gerar</button>
+    </form>
+    <hr>
+    {% if consulta_visitante %}
+    {% include 'core/includes/relatorio_visitante.html' %}
+    {% endif %}
+    {% if consulta_chave %}
+    {% include 'core/includes/relatorio_chave.html' %}
+    {% endif %}
+    {% if consulta_veiculo %}
+    {% include 'core/includes/relatorio_veiculo.html' %}
+    {% endif %}
+</div>
+{% block scripts %}
+    <script>
+        $(".form-check").on('click', function(){
+            let data_inicial = $("#dataInicial").val()
+            let data_final = $("#dataFinal").val()
+            if (data_final < data_inicial){
+                $("#gerarRelatorio").hide()
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Data final não pode ser menor que a data inicial', 
+                })
+            } else{
+                $("#gerarRelatorio").show()
+            }
+        })
+    </script>
+{% endblock %}
+{% endblock %}

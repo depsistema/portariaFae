@@ -82,6 +82,7 @@
                 <table class="table table-hover" id="tableVisitante">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Registro Entrada</th>
                             <th>Nome</th>
                             <th>CPF</th>
@@ -99,6 +100,7 @@
                     <tbody>
                         {% for visitante in visitantes %}
                         <tr>
+                            <td>{{visitante.id}}</td>
                             <td>{{visitante.registro_entrada | date:"d/m/Y H:m"}}</td>
                             <td>{{visitante.nome}}</td>
                             <td>{{visitante.cpf}}</td>

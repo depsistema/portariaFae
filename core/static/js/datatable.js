@@ -5,11 +5,6 @@ $(document).ready(function () {
                 "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
             },
             order: [[0, 'desc']],
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5',
-                'pdfHtml5'
-            ]
         },
     )
 });
@@ -20,12 +15,7 @@ $(document).ready(function () {
             "language":{
                 "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
             },
-            order: [[2, 'desc']],
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5',
-                'pdfHtml5'
-            ]
+            order: [[0, 'desc']],
         },
     )
 });
@@ -36,12 +26,53 @@ $(document).ready(function () {
             "language":{
                 "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
             },
-            order: [[2, 'desc']],
+            order: [[0, 'desc']],
+        },
+    )
+});
+
+$(document).ready(function () {
+    $('#relatorioVisitante').DataTable(
+        {
+            "language":{
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
+            },
+            order: [[0, 'desc']],
             dom: 'Bfrtip',
             buttons: [
-                'excelHtml5',
-                'pdfHtml5'
-            ]
+                'excel', 'pdf',
+            ],
+        },
+    )
+});
+
+$(document).ready(function () {
+    $('#relatorioChave').DataTable(
+        {
+            "language":{
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
+            },
+            order: [[0, 'desc']],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf',
+            ],
+            
+        },
+    )
+});
+
+$(document).ready(function () {
+    $('#relatorioVeiculo').DataTable(
+        {
+            "language":{
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json",
+            },
+            order: [[0, 'desc']],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf',
+            ],
         },
     )
 });
